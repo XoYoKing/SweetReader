@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SweetReader</string>
+
+    <string name="city_weather_update_time">%1$s更新时间</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="temperatrue_symbol">&#176;</string>
+    <string name="temperatrue_symbol_0">&#047;</string>
+</resources>

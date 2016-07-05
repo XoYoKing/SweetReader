@@ -1,0 +1,244 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hm.sweetreader.weather.WeatherFragment">
+
+    <ImageView
+        android:id="@+id/weather_address_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/weather_address_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/weather_address_icon"
+        android:paddingTop="15dp"
+        android:text="4567987"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/weather_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/weather_address_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="6-28 星期二"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:id="@+id/weather_temperature_mian_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_address_name"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/weather_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="30"
+            android:textSize="100sp" />
+
+        <TextView
+            android:id="@+id/weather_temperature_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/weather_temperature"
+            android:layout_toRightOf="@+id/weather_temperature"
+            android:text="@string/temperatrue_symbol"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/weather_weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weather_temperature"
+            android:layout_toRightOf="@+id/weather_temperature"
+            android:text="雷阵雨"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_temperature_diff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_temperature_mian_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/weather_temperature_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="33"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/weather_temperatrue_du"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/weather_temperature_high"
+            android:text="@string/temperatrue_symbol_0"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/weather_temperature_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/weather_temperatrue_du"
+            android:text="28"
+            android:textSize="35sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_api_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_temperature_diff"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/weather_aqi_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前空气指数：" />
+
+        <TextView
+            android:id="@+id/weather_aqi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/weather_aqi_text"
+            android:text="50" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_shidu_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_api_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/weather_shidu_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前湿度：" />
+
+        <TextView
+            android:id="@+id/weather_shidu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/weather_shidu_text"
+            android:text="76%" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_fengxiang_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_shidu_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/weather_fengxiang_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="风向：" />
+
+        <TextView
+            android:id="@+id/weather_fengxiang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/weather_fengxiang_text"
+            android:text="东南风" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_fengli_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_fengxiang_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/weather_fengli_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="风力：" />
+
+        <TextView
+            android:id="@+id/weather_fengli"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/weather_fengli_text"
+            android:text="3级" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weather_tip_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_fengli_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/weather_tip_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weather_tip_image"
+            android:text="更多生活指南" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/weather_tip_view"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:id="@+id/weather_reflush_view">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+          android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:text="15:27更新"
+            android:id="@+id/weather_reflush"/>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未来天气趋势"
+        android:layout_below="@+id/weather_reflush_view"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/weather_add_more"/>
+
+
+</RelativeLayout>
