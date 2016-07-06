@@ -76,15 +76,15 @@ public class MusicService extends Service {
             //获取assets目录下指定文件的AssetFileDescriptor对象
             //TODO
             AssetFileDescriptor assetFileDescriptor = assetManager.openFd(musics[current]);
-            String path=intent.getStringExtra("filePath");
-            if (path==null){
-               return;
-            }
+//            String path=intent.getStringExtra("filePath");
+//            if (path==null){
+//               return;
+//            }
 
             mediaPlayer.reset();//初始化mediaPlayer对象
-//            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
-//                    assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
-            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
+                    assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
+//            mediaPlayer.setDataSource(path);
             //准备播放音乐
             mediaPlayer.prepare();
             //播放音乐

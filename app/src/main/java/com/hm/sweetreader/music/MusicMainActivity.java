@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.music.view.MusicPlayViewGroup;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MusicMainActivity extends AppCompatActivity {
     private boolean isAuto = false;
 
     private DrawerLayout drawerLayout;
+    private MusicPlayViewGroup musicPlayViewGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class MusicMainActivity extends AppCompatActivity {
         filter.addAction(Contents.MUSICBOX_ACTION);
         filter.addAction(Contents.MUSICBOX_ACTION_PROGRESS);
         registerReceiver(mReceiver, filter);
-
 
 
     }
@@ -71,7 +72,7 @@ public class MusicMainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        drawerLayout=(DrawerLayout)findViewById(R.id.music_main_drawerlayout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.music_main_drawerlayout);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
                 Gravity.RIGHT);
         initEvents();
@@ -86,6 +87,8 @@ public class MusicMainActivity extends AppCompatActivity {
         skbMusic.setOnSeekBarChangeListener(sChangeListener);
         title = (TextView) findViewById(R.id.music_main_name);
         author = (TextView) findViewById(R.id.music_main_anuthor);
+
+        musicPlayViewGroup = (MusicPlayViewGroup) findViewById(R.id.music_main_group);
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
@@ -98,22 +101,28 @@ public class MusicMainActivity extends AppCompatActivity {
                     btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                     sendBroadcastToService(Contents.STATE_NEXT);
                     isPlaying = true;
+                        musicPlayViewGroup.stopAnimation();
+                        musicPlayViewGroup.startAnimation();
                     break;
                 case R.id.music_main_play://播放或暂停
                     if (!isPlaying) {
                         btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                         sendBroadcastToService(Contents.STATE_PLAY);
                         isPlaying = true;
+                        musicPlayViewGroup.reStartAnimation();
                     } else {
                         btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                         sendBroadcastToService(Contents.STATE_PAUSE);
                         isPlaying = false;
+                        musicPlayViewGroup.stopAnimation();
                     }
                     break;
                 case R.id.music_main_last://上一首
                     btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                     sendBroadcastToService(Contents.STATE_PREVIOUS);
                     isPlaying = true;
+                    musicPlayViewGroup.stopAnimation();
+                    musicPlayViewGroup.startAnimation();
                     break;
                 default:
                     break;
@@ -234,32 +243,26 @@ public class MusicMainActivity extends AppCompatActivity {
     }
 
 
-    public void OpenLeftMenu(View view)
-    {
+    public void OpenLeftMenu(View view) {
         drawerLayout.openDrawer(Gravity.LEFT);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED,
                 Gravity.RIGHT);
     }
 
-    private void initEvents()
-    {
-        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener()
-        {
+    private void initEvents() {
+        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerStateChanged(int newState)
-            {
+            public void onDrawerStateChanged(int newState) {
             }
 
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset)
-            {
+            public void onDrawerSlide(View drawerView, float slideOffset) {
                 View mContent = drawerLayout.getChildAt(0);
                 View mMenu = drawerView;
                 float scale = 1 - slideOffset;
                 float rightScale = 0.8f + scale * 0.2f;
 
-                if (drawerView.getTag().equals("LEFT"))
-                {
+                if (drawerView.getTag().equals("LEFT")) {
 
                     float leftScale = 1 - 0.3f * scale;
 
@@ -274,8 +277,7 @@ public class MusicMainActivity extends AppCompatActivity {
                     mContent.invalidate();
 //                    ViewHelper.setScaleX(mContent, rightScale);
 //                    ViewHelper.setScaleY(mContent, rightScale);
-                } else
-                {
+                } else {
                     ViewHelper.setTranslationX(mContent,
                             -mMenu.getMeasuredWidth() * slideOffset);
                     ViewHelper.setPivotX(mContent, mContent.getMeasuredWidth());
@@ -289,13 +291,11 @@ public class MusicMainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onDrawerOpened(View drawerView)
-            {
+            public void onDrawerOpened(View drawerView) {
             }
 
             @Override
-            public void onDrawerClosed(View drawerView)
-            {
+            public void onDrawerClosed(View drawerView) {
                 drawerLayout.setDrawerLockMode(
                         DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.RIGHT);
             }
