@@ -9,6 +9,7 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hm.sweetreader.Contents;
 
@@ -17,6 +18,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MusicService extends Service {
+
+    private String TAG = MusicService.class.getSimpleName();
 
     private Timer mTimer;
     private TimerTask mTimerTask;
@@ -47,7 +50,7 @@ public class MusicService extends Service {
         super.onCreate();
 
         assetManager = getAssets();
-
+        mediaPlayer = new MediaPlayer();
         MusicSercieReceiver receiver = new MusicSercieReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Contents.MUSICSERVICE_ACTION_STATE);
@@ -60,7 +63,7 @@ public class MusicService extends Service {
      *
      * @param index int index 播放第几首音乐的索引
      */
-    protected void prepareAndPlay(int index, final Intent intent) {
+    protected void prepareAndPlay(int index) {
         if (isTimerRunning) {//如果Timer正在运行
             mTimer.cancel();//取消定时器
             isTimerRunning = false;
@@ -80,20 +83,22 @@ public class MusicService extends Service {
 //            if (path==null){
 //               return;
 //            }
-
-            mediaPlayer.reset();//初始化mediaPlayer对象
+            //重置MediaPlayer进入未初始化状态
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
                     assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
 //            mediaPlayer.setDataSource(path);
             //准备播放音乐
             mediaPlayer.prepare();
+//            mediaPlayer.prepareAsync();
             //播放音乐
             mediaPlayer.start();
             //getDuration()方法要在prepare()方法之后，否则会出现Attempt to call getDuration without a valid mediaplayer异常
             // TODO
 //            MusicMainActivity.skbMusic.setMax(mediaPlayer.getDuration());//设置SeekBar的长度
 //            onHandleIntent(intent, 0, mediaPlayer.getDuration());
-            sendBroadcastToActivity(0,mediaPlayer.getDuration(),0);
+            sendBroadcastToActivity(0, mediaPlayer.getDuration(), 0);
+            Log.e(TAG, "max IS " + mediaPlayer.getDuration());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,47 +110,47 @@ public class MusicService extends Service {
                 isTimerRunning = true;
                 if (isChanging == true)//当用户正在拖动进度进度条时不处理进度条的的进度
                     return;
-                //TODO
-//                MusicMainActivity.skbMusic.setProgress(mediaPlayer.getCurrentPosition());
-//                onHandleIntent(intent, 1, mediaPlayer.getCurrentPosition());
-                sendBroadcastToActivity(1,0,mediaPlayer.getCurrentPosition());
+
+                sendBroadcastToActivity(1, 0, mediaPlayer.getCurrentPosition());
+                Log.e(TAG, "PROGRESS IS " + mediaPlayer.getCurrentPosition());
             }
         };
         //每隔10毫秒检测一下播放进度
         mTimer.schedule(mTimerTask, 0, 10);
     }
 
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-
-        mediaPlayer = new MediaPlayer();
+//        mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 current++;
-                prepareAndPlay(current, intent);
+                prepareAndPlay(current);
             }
         });
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-   private void sendBroadcastToActivity(int index){
-       //发送广播停止前台Activity更新界面
-       Intent intentOne = new Intent();
-       intentOne.putExtra("current", index);
-       intentOne.setAction(Contents.MUSICBOX_ACTION);
-       sendBroadcast(intentOne);
-   }
-    private void sendBroadcastToActivity(int state,int max,int progress){
+    private void sendBroadcastToActivity(int index) {
+        //发送广播停止前台Activity更新界面
+        Intent intentOne = new Intent();
+        intentOne.putExtra("current", index);
+        intentOne.setAction(Contents.MUSICBOX_ACTION);
+        sendBroadcast(intentOne);
+    }
+
+    private void sendBroadcastToActivity(int state, int max, int progress) {
         //发送广播停止前台Activity更新界面
         Intent intentOne = new Intent();
         intentOne.putExtra("state", state);
         intentOne.setAction(Contents.MUSICBOX_ACTION_PROGRESS);
-        if (state==0){
-            intentOne.putExtra("max",max);
-        }else {
-            intentOne.putExtra("progress",progress);
+        if (state == 0) {
+            intentOne.putExtra("max", max);
+        } else {
+            intentOne.putExtra("progress", progress);
         }
         sendBroadcast(intentOne);
     }
@@ -162,7 +167,7 @@ public class MusicService extends Service {
                         if (state == Contents.STATE_PAUSE) {//如果原来状态是暂停
                             mediaPlayer.start();
                         } else if (state != Contents.STATE_PLAY) {
-                            prepareAndPlay(current, intent);
+                            prepareAndPlay(current);
                         }
                         state = Contents.STATE_PLAY;
                         break;
@@ -179,12 +184,22 @@ public class MusicService extends Service {
                         }
                         break;
                     case Contents.STATE_PREVIOUS://上一首
-                        prepareAndPlay(--current, intent);
-                        state = Contents.STATE_PLAY;
+                        prepareAndPlay(--current);
+                        if (state == Contents.STATE_PLAY) {
+                            state = Contents.STATE_PLAY;
+                        } else {//如果原来状态是暂停
+                            mediaPlayer.pause();
+                            state=Contents.STATE_PAUSE;
+                        }
                         break;
                     case Contents.STATE_NEXT://下一首
-                        prepareAndPlay(++current, intent);
-                        state = Contents.STATE_PLAY;
+                        prepareAndPlay(++current);
+                        if (state == Contents.STATE_PLAY) {
+                            state = Contents.STATE_PLAY;
+                        } else {//如果原来状态是暂停
+                            mediaPlayer.pause();
+                            state=Contents.STATE_PAUSE;
+                        }
                         break;
                     default:
                         break;
@@ -193,8 +208,11 @@ public class MusicService extends Service {
 
                 if (intent.getIntExtra("state", -1) == 0) {
                     mediaPlayer.seekTo(intent.getIntExtra("progress", 0));
+                    Log.e(TAG, "SEEK TO IS " + intent.getIntExtra("progress", 0));
                     isChanging = false;
                 } else {
+                    Log.e(TAG, "SEEK TO IS 1111" + intent.getIntExtra("progress", 0));
+
                     isChanging = true;
 
                 }

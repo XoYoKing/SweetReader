@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -12,22 +13,21 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.music.view.BlurUtils;
 import com.hm.sweetreader.music.view.MusicPlayViewGroup;
 import com.nineoldandroids.view.ViewHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MusicMainActivity extends AppCompatActivity {
 
-    private List<String> mData = new ArrayList<>();
-    private ImageButton btnPlayOrPause, btnPre, btnNext;
+    private String TAG = MusicMainActivity.class.getSimpleName();
+    private ImageView btnPlayOrPause, btnPre, btnNext;
     //进度条
     private SeekBar skbMusic;
     // 获取界面中显示歌曲标题、作者文本框
@@ -41,6 +41,7 @@ public class MusicMainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private MusicPlayViewGroup musicPlayViewGroup;
+    private RelativeLayout musicBlurView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,12 @@ public class MusicMainActivity extends AppCompatActivity {
                 Gravity.RIGHT);
         initEvents();
 
-        btnPlayOrPause = (ImageButton) findViewById(R.id.music_main_play);
-        btnPre = (ImageButton) findViewById(R.id.music_main_last);
-        btnNext = (ImageButton) findViewById(R.id.music_main_next);
+        musicBlurView=(RelativeLayout)findViewById(R.id.music_main_view) ;
+        BlurUtils.applyBlurForRS(this,musicBlurView, BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
+
+        btnPlayOrPause = (ImageView) findViewById(R.id.music_main_play);
+        btnPre = (ImageView) findViewById(R.id.music_main_last);
+        btnNext = (ImageView) findViewById(R.id.music_main_next);
         skbMusic = (SeekBar) findViewById(R.id.music_main_seekbar);
         btnNext.setOnClickListener(listener);
         btnPlayOrPause.setOnClickListener(listener);
@@ -94,15 +98,15 @@ public class MusicMainActivity extends AppCompatActivity {
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO Auto-generated method stub
-
             switch (v.getId()) {
                 case R.id.music_main_next://下一首
                     btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                     sendBroadcastToService(Contents.STATE_NEXT);
-                    isPlaying = true;
-                        musicPlayViewGroup.stopAnimation();
+                    musicPlayViewGroup.stopAnimation();
+                    //切换时的播放状态 正在播放则切换后继续播放
+                    if (isPlaying) {
                         musicPlayViewGroup.startAnimation();
+                    }
                     break;
                 case R.id.music_main_play://播放或暂停
                     if (!isPlaying) {
@@ -114,15 +118,17 @@ public class MusicMainActivity extends AppCompatActivity {
                         btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                         sendBroadcastToService(Contents.STATE_PAUSE);
                         isPlaying = false;
-                        musicPlayViewGroup.stopAnimation();
+                        musicPlayViewGroup.pauseAnimation();
                     }
                     break;
                 case R.id.music_main_last://上一首
                     btnPlayOrPause.setBackgroundResource(R.mipmap.ic_launcher);
                     sendBroadcastToService(Contents.STATE_PREVIOUS);
-                    isPlaying = true;
                     musicPlayViewGroup.stopAnimation();
-                    musicPlayViewGroup.startAnimation();
+                    //切换时的播放状态 正在播放则切换后继续播放
+                    if (isPlaying) {
+                        musicPlayViewGroup.startAnimation();
+                    }
                     break;
                 default:
                     break;
@@ -137,8 +143,6 @@ public class MusicMainActivity extends AppCompatActivity {
         public void onStopTrackingTouch(SeekBar seekBar) {
             // TODO Auto-generated method stub
             //当拖动停止后，控制mediaPlayer播放指定位置的音乐
-//            MusicService.mediaPlayer.seekTo(seekBar.getProgress());
-//            MusicService.isChanging = false;
             if (isAuto) {
                 sendBroadcastToService(0, seekBar.getProgress());
                 isAuto = false;
@@ -147,17 +151,12 @@ public class MusicMainActivity extends AppCompatActivity {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
-//            MusicService.isChanging = true;
-            sendBroadcastToService(1, 0);
             isAuto = true;
         }
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                                       boolean fromUser) {
-            // TODO Auto-generated method stub
-
         }
     };
 
@@ -175,26 +174,24 @@ public class MusicMainActivity extends AppCompatActivity {
      * @param state int state 控制状态码
      */
     protected void sendBroadcastToService(int state) {
-        // TODO Auto-generated method stub
         Intent intent = new Intent();
         intent.setAction(Contents.MUSICSERVICE_ACTION_STATE);
         intent.putExtra("control", state);
-//        intent.putExtra("handler", rr);
-
-        //向后台Service发送播放控制的广播
         sendBroadcast(intent);
     }
 
+    /**
+     * 向后台发送进度广播
+     * @param state
+     * @param progress
+     */
     protected void sendBroadcastToService(int state, int progress) {
-        // TODO Auto-generated method stub
         Intent intent = new Intent();
         intent.setAction(Contents.MUSICSERVICE_ACTION_PROGRESS);
         intent.putExtra("state", state);
         if (state == 0) {
             intent.putExtra("progress", progress);
         }
-
-        //向后台Service发送播放控制的广播
         sendBroadcast(intent);
     }
 
@@ -221,7 +218,9 @@ public class MusicMainActivity extends AppCompatActivity {
         return true;
     }
 
-    //创建一个广播接收器用于接收后台Service发出的广播
+    /**
+     *  创建一个广播接收器用于接收后台Service发出的广播
+     */
     class MusicBoxReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -232,10 +231,14 @@ public class MusicMainActivity extends AppCompatActivity {
                 title.setText(titleStrs[current]);//更新音乐标题
                 author.setText(authorStrs[current]);//更新音乐作者
             } else if (intent.getAction().equals(Contents.MUSICBOX_ACTION_PROGRESS)) {
+                //获得音乐长度
                 if (intent.getIntExtra("state", -1) == 0) {
                     skbMusic.setMax(intent.getIntExtra("max", 0));
                 } else {
-                    skbMusic.setProgress(intent.getIntExtra("progress", 0));
+                    //判断是否在拖动
+                    if (!isAuto) {
+                        skbMusic.setProgress(intent.getIntExtra("progress", 0));
+                    }
                 }
             }
         }

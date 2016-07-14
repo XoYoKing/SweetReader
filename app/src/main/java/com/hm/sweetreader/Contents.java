@@ -51,4 +51,6 @@ public class Contents {
     public static final int MENU_ABOUT=0x200;
     //菜单退出选的项的itemId
     public static final int MENU_EXIT=0x201;
+    //音乐播放器旋转一圈所要时间 单位 ms 毫秒
+    public static final int MUSIC_TIEM=10000;
 }

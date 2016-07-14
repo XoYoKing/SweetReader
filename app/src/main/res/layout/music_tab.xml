@@ -3,19 +3,27 @@
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingLeft="10dp">
+    <SeekBar
+        android:id="@+id/music_tab_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@mipmap/ic_launcher"
         android:id="@+id/music_tab_icon"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/music_tab_seekbar"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/music_tab_name"
         android:text="前世恋人"
         android:layout_toRightOf="@+id/music_tab_icon"
-        android:textSize="25sp"/>
+        android:textSize="25sp"
+        android:layout_below="@+id/music_tab_seekbar"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +36,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/music_tab_seekbar">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

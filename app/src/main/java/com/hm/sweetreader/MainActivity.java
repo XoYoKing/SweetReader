@@ -34,7 +34,8 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createFile();
+        createFile("123.txt","小说.txt");
+//        createFile("father.LRC","father.LRC");
         init();
 
     }
@@ -79,15 +80,15 @@ public class MainActivity extends FragmentActivity {
         listBook.setAdapter(adapter);
     }
 
-    private void createFile() {
+    private void createFile(String name,String fileName) {
         File file = new File(Contents.rootFilePath);
         if (!file.exists()) {
             file.mkdirs();
         }
 
         try {
-            InputStream inputStream = getAssets().open("123.txt");
-            FileOutputStream fos = new FileOutputStream(Contents.rootFilePath + File.separator + "小说.txt");
+            InputStream inputStream = getAssets().open(name);
+            FileOutputStream fos = new FileOutputStream(Contents.rootFilePath + File.separator + fileName);
             byte[] b = new byte[1024];
             while ((inputStream.read(b)) != -1) {
                 fos.write(b);

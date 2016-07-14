@@ -1,11 +1,11 @@
 package com.hm.sweetreader.music.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,8 +25,8 @@ public class MusicPlayViewGroup extends RelativeLayout {
     private MusicPlayView playView;
     private ObjectAnimator anim;
     //是否是继续播放
-    private boolean isFirst = true;
-    private float offerX = 0;
+//    private boolean isPause = false;
+//    private float offerX = 0;
 
     public MusicPlayViewGroup(Context context) {
         this(context, null);
@@ -58,16 +58,9 @@ public class MusicPlayViewGroup extends RelativeLayout {
         playView.setBackground(background);
     }
 
-//    public void initAnimation() {
-//
-//        anim = ObjectAnimator.ofFloat(playView, "rotationZ", 0.0F, 360.0F)//
-//                .setDuration(10000);//
-//        anim.setRepeatCount(0);//Animation.INFINITE
-//        anim.setInterpolator(new LinearInterpolator());
-//    }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void startAnimation() {
-//        playView.setRotation();
         anim = ObjectAnimator.ofFloat(playView, "rotationZ", 0, 360.0F)//
                 .setDuration(10000);//
         anim.setRepeatCount(Animation.INFINITE);//Animation.INFINITE
@@ -80,53 +73,31 @@ public class MusicPlayViewGroup extends RelativeLayout {
                 playView.setRotation(cVal);
             }
         });
+
     }
 
     public void stopAnimation() {
-        offerX =anim.getCurrentPlayTime();
-        anim.cancel();
+//        offerX = anim.getCurrentPlayTime();
+        if (anim != null) {
+            anim.cancel();
+            anim = null;
+        }
     }
-    public void reStartAnimation(){
-        if (anim==null){
-            startAnimation();
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void pauseAnimation() {
+//        offerX = anim.getCurrentPlayTime();
+        if (anim != null)
+            anim.pause();
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void reStartAnimation() {
+
+        if (anim != null && anim.isPaused()) {
+            anim.resume();
             return;
         }
-        anim = ObjectAnimator.ofFloat(playView, "rotationZ", offerX/10000*360, 360.0F)//
-                .setDuration((int)(10000-offerX));//
-        anim.setRepeatCount(0);//Animation.INFINITE
-        anim.setInterpolator(new LinearInterpolator());
-        anim.start();
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float cVal = (Float) animation.getAnimatedValue();
-                playView.setRotation(cVal);
-            }
-        });
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                animation.cancel();
-                startAnimation();
-            }
-        });
+        startAnimation();
     }
-
-//    public void initAnimation() {
-//        playView.initAnimation();
-//
-//    }
-
-//    public void startAnimation() {
-//        if (playView != null) {
-//            playView.startAnimation();
-//        }
-//    }
-
-//    public void stopAnimation() {
-//        if (playView != null) {
-//            playView.stopAnimation();
-//        }
-//    }
-
 }

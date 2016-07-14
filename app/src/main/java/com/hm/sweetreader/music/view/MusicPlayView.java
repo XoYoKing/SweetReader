@@ -7,13 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 
-import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.R;
 import com.hm.sweetreader.ScreenUtils;
 
@@ -31,7 +26,7 @@ public class MusicPlayView extends View {
     private Context context;
     private Bitmap bitmap;
 
-    private RotateAnimation animation;
+//    private RotateAnimation animation;
 
     public MusicPlayView(Context context) {
 //        super(context);
@@ -116,7 +111,7 @@ public class MusicPlayView extends View {
         //画图片，就是贴图
 
 //        Rect rect=new Rect(0,0,144,144);
-        RectF rectF = new RectF(getX() + center / 4 * 3, getY() + center / 2, getX() + center / 4 * 5, getY() + center);
+        RectF rectF = new RectF(getX() + center / 4 * 3, getY() + center / 4, getX() + center / 4 * 5, getY()+center/4*3);
         canvas.drawBitmap(bitmap, null, rectF, paintNei);
 
         //绘制圆环
@@ -132,49 +127,38 @@ public class MusicPlayView extends View {
 
     }
 
-    /**
-     * 开始动画 设置动画时长 单位 毫秒
-     */
-    public void initAnimation() {
-        animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setFillBefore(true);
-        animation.setDuration(Contents.MUSIC_TIEM);//设置动画持续时间
-        animation.setInterpolator(new LinearInterpolator());//不停顿
-        /** 常用方法 */
-        animation.setRepeatCount(Animation.INFINITE);//设置重复次数
-        animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        //animation.setStartOffset(long startOffset);//执行前的等待时间
-
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                Log.e("123", "on start");
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Log.e("123", "on end");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                Log.e("123", "on repeat");
-            }
-        });
-//        playView.setAnimation(animation);
-        /** 开始动画 */
-//        animation.startNow();
-    }
-    public void startAnimation() {
-        if (animation != null) {
-            this.startAnimation(animation);
-        }
-    }
-
-    public void stopAnimation() {
-        if (animation != null) {
-            animation.cancel();
-        }
-    }
+//    /**
+//     * 开始动画 设置动画时长 单位 毫秒
+//     */
+//    public void initAnimation() {
+//        animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
+//                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//        animation.setFillBefore(true);
+//        animation.setDuration(Contents.MUSIC_TIEM);//设置动画持续时间
+//        animation.setInterpolator(new LinearInterpolator());//不停顿
+//        /** 常用方法 */
+//        animation.setRepeatCount(Animation.INFINITE);//设置重复次数
+//        animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+//        //animation.setStartOffset(long startOffset);//执行前的等待时间
+//
+//        animation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//                Log.e("123", "on start");
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                Log.e("123", "on end");
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//                Log.e("123", "on repeat");
+//            }
+//        });
+////        playView.setAnimation(animation);
+//        /** 开始动画 */
+////        animation.startNow();
+//    }
 }

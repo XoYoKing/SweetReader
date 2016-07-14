@@ -3,59 +3,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.hm.sweetreader.music.MusicMainActivity"
     android:id="@+id/music_main_drawerlayout">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            layout="@layout/music_tab"
+        android:layout_height="match_parent"
+        android:id="@+id/music_main_view">
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true">
+            <SeekBar
+                android:id="@+id/music_main_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/music_main_icon"
+                android:layout_below="@+id/music_main_seekbar" />
+            <!--android:layout_centerVertical="true"-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_main_name"
+                android:text="前世恋人"
+                android:layout_toRightOf="@+id/music_main_icon"
+                android:textSize="25sp"
+                android:layout_below="@+id/music_main_seekbar"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/music_main_anuthor"
+                android:text="JJ"
+                android:layout_below="@+id/music_main_name"
+                android:layout_toRightOf="@+id/music_main_icon"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
 
-        <TextView
-            android:id="@+id/music_main_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                android:layout_below="@+id/music_main_seekbar">
+                android:layout_centerVertical="true"
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/music_main_last"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/music_main_play" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/music_main_next"/>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/music_main_anuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/music_main_name" />
-
-        <SeekBar
-            android:id="@+id/music_main_seekbar"
+        </RelativeLayout>
+        <com.hm.sweetreader.music.view.MusicPlayViewGroup
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/music_main_name" />
-
-        <ImageButton
-            android:id="@+id/music_main_last"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/music_main_seekbar"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/music_main_play"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/music_main_seekbar"
-            android:layout_toRightOf="@+id/music_main_last"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/music_main_next"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/music_main_seekbar"
-            android:layout_toRightOf="@+id/music_main_play"
-            android:src="@mipmap/ic_launcher" />
-
+            android:layout_height="match_parent"
+            android:id="@+id/music_main_group"/>
     </RelativeLayout>
     <fragment
         android:id="@+id/id_left_menu_musci"
