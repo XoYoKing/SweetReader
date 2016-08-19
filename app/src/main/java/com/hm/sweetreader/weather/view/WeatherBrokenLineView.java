@@ -24,7 +24,7 @@ public class WeatherBrokenLineView extends View {
 
     private String TAG = WeatherBrokenLineView.class.getSimpleName();
 
-    private Paint paintHigh, paintLow, paintHighText, paintLowText, paintDayText;
+    private Paint paintHigh, paintLow, paintHighText, paintLowText, paintDayText,paintHeighPoint,paintLowPoint;
     private int width, height;
     private List<Integer> first, second;
     private List<String> day, weather;
@@ -92,31 +92,41 @@ public class WeatherBrokenLineView extends View {
         paintHigh.setStyle(Paint.Style.STROKE);
         paintHigh.setAntiAlias(true);
         paintHigh.setColor(Color.YELLOW);
-        paintHigh.setStrokeWidth(10);
+        paintHigh.setStrokeWidth(5);
+
+        paintHeighPoint=new Paint();
+        paintHeighPoint.setAntiAlias(true);
+        paintHeighPoint.setColor(Color.YELLOW);
+        paintHeighPoint.setStrokeWidth(5);
 
         paintHighText = new Paint();
         paintHighText.setStyle(Paint.Style.STROKE);
         paintHighText.setAntiAlias(true);
         paintHighText.setColor(Color.BLACK);
-        paintHighText.setTextSize(50);
+        paintHighText.setTextSize(25);
 
         paintLow = new Paint();
         paintLow.setStyle(Paint.Style.STROKE);
         paintLow.setAntiAlias(true);
         paintLow.setColor(Color.GREEN);
-        paintLow.setStrokeWidth(10);
+        paintLow.setStrokeWidth(5);
+
+        paintLowPoint=new Paint();
+        paintLowPoint.setAntiAlias(true);
+        paintLowPoint.setColor(Color.GREEN);
+        paintLowPoint.setStrokeWidth(5);
 
         paintLowText = new Paint();
         paintLowText.setStyle(Paint.Style.STROKE);
         paintLowText.setAntiAlias(true);
         paintLowText.setColor(Color.GREEN);
-        paintLowText.setTextSize(50);
+        paintLowText.setTextSize(25);
 
         paintDayText = new Paint();
         paintDayText.setStyle(Paint.Style.STROKE);
         paintDayText.setAntiAlias(true);
         paintDayText.setColor(Color.BLACK);
-        paintDayText.setTextSize(50);
+        paintDayText.setTextSize(25);
     }
 
     private void drawDayAndWeather(Canvas canvas) {
@@ -127,7 +137,7 @@ public class WeatherBrokenLineView extends View {
         float weather_x = getX()-25;
         float weather_y = getY() + 100;
         for (int i = 0; i < day.size(); i++) {
-            canvas.drawText(day.get(i), day_x, day_y, paintDayText);
+            canvas.drawText(day.get(i), day_x-10, day_y, paintDayText);
             day_x = getX() + (i + 1) * widthEvery;
         }
 
@@ -157,13 +167,13 @@ public class WeatherBrokenLineView extends View {
         for (int i = 0; i < second.size(); i++) {
 
             canvas.drawLine(tag_heith_x, tag_heith_y, getX() + i * widthEvery, getY() + height - first.get(i) * heightEvery, paintHigh);
-            canvas.drawCircle(getX() + i * widthEvery, getY() + height - first.get(i) * heightEvery, 10, paintHigh);
+            canvas.drawCircle(getX() + i * widthEvery, getY() + height - first.get(i) * heightEvery, 8, paintHeighPoint);
             canvas.drawText(String.valueOf(first.get(i)), getX() + i * widthEvery - 10, getY() + height - first.get(i) * heightEvery - 20, paintHighText);
             tag_heith_x = (getX() + i * widthEvery);
             tag_heith_y = (getY() + height - first.get(i) * heightEvery);
 
             canvas.drawLine(tag_low_x, tag_low_y, getX() + i * widthEvery, getY() + height - second.get(i) * heightEvery, paintLow);
-            canvas.drawCircle(getX() + i * widthEvery, getY() + height - second.get(i) * heightEvery, 10, paintLow);
+            canvas.drawCircle(getX() + i * widthEvery, getY() + height - second.get(i) * heightEvery, 8, paintLowPoint);
             canvas.drawText(String.valueOf(second.get(i)), getX() + i * widthEvery - 10, getY() + height - second.get(i) * heightEvery - 20, paintHighText);
             tag_low_x = getX() + i * widthEvery;
             tag_low_y = getY() + height - second.get(i) * heightEvery;

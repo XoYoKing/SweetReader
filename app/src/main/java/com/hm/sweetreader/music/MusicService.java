@@ -36,6 +36,8 @@ public class MusicService extends Service {
     AssetManager assetManager;
     private String[] musics = {"fourheart.mp3", "father.mp3", "mizukiaLIEz.mp3"};
 
+    private Intent intent;
+
     public MusicService() {
     }
 
@@ -78,16 +80,16 @@ public class MusicService extends Service {
         try {
             //获取assets目录下指定文件的AssetFileDescriptor对象
             //TODO
-            AssetFileDescriptor assetFileDescriptor = assetManager.openFd(musics[current]);
-//            String path=intent.getStringExtra("filePath");
-//            if (path==null){
-//               return;
-//            }
+//            AssetFileDescriptor assetFileDescriptor = assetManager.openFd(musics[current]);
+            String path = intent.getStringExtra("filePath");
+            if (path == null) {
+                return;
+            }
             //重置MediaPlayer进入未初始化状态
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
-                    assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
-//            mediaPlayer.setDataSource(path);
+//            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
+//                    assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
+            mediaPlayer.setDataSource(path);
             //准备播放音乐
             mediaPlayer.prepare();
 //            mediaPlayer.prepareAsync();
@@ -123,6 +125,7 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
 //        mediaPlayer = new MediaPlayer();
+        this.intent = intent;
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -189,7 +192,7 @@ public class MusicService extends Service {
                             state = Contents.STATE_PLAY;
                         } else {//如果原来状态是暂停
                             mediaPlayer.pause();
-                            state=Contents.STATE_PAUSE;
+                            state = Contents.STATE_PAUSE;
                         }
                         break;
                     case Contents.STATE_NEXT://下一首
@@ -198,7 +201,7 @@ public class MusicService extends Service {
                             state = Contents.STATE_PLAY;
                         } else {//如果原来状态是暂停
                             mediaPlayer.pause();
-                            state=Contents.STATE_PAUSE;
+                            state = Contents.STATE_PAUSE;
                         }
                         break;
                     default:

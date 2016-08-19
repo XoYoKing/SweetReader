@@ -7,4 +7,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="temperatrue_symbol">&#176;</string>
     <string name="temperatrue_symbol_0">&#047;</string>
+    <!--空格符-->
+    <string name="blank">&#160;&#160;</string>
 </resources>

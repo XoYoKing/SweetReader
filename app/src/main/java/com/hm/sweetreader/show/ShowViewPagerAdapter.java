@@ -195,20 +195,22 @@ public class ShowViewPagerAdapter extends PagerAdapter {
     }
 
     private List<ShowEntity> getData(String resId) throws UnsupportedEncodingException {
-        String s = FileUtils.readFileContentByBufferReader(resId);
+        String s = FileUtils.readFile(resId);
+//        String s = FileUtils.readFileContentByBufferReader(resId);
         Log.e(TAG, "s length is " + s.length());
+//        Log.e(TAG, "s  is " + s);
         int page = 0;
         if (s.length() % Contents.byteInPage == 0) {
-            page = s.length() / 1024;
+            page = s.length() / (64 * 12);
         } else {
-            page = s.length() / 1024 + 1;
+            page = s.length() / (64 * 12) + 1;
         }
         Log.e(TAG, "page is " + page);
         List<ShowEntity> listShow = new ArrayList<>();
         ShowEntity showEntity = null;
         for (int i = 0; i < page; i++) {
             if (i == page - 1) {
-                Log.e(TAG, "the last  === " + s.substring(i * Contents.byteInPage, s.length()));
+//                Log.e(TAG, "the last  === " + s.substring(i * Contents.byteInPage, s.length()));
                 showEntity = new ShowEntity(System.currentTimeMillis(), s.substring(i * Contents.byteInPage, s.length()));
                 listShow.add(showEntity);
                 break;
@@ -216,7 +218,7 @@ public class ShowViewPagerAdapter extends PagerAdapter {
             String mm = s.substring(i * Contents.byteInPage, (i + 1) * Contents.byteInPage - 1);
             Log.e(TAG, "start " + i + " is" + i * Contents.byteInPage);
             Log.e(TAG, "end " + i + " is" + (i + 1) * Contents.byteInPage);
-            Log.e(TAG, "MM === " + mm);
+//            Log.e(TAG, "MM === " + mm);
             showEntity = new ShowEntity(System.currentTimeMillis(), mm);
             listShow.add(showEntity);
 

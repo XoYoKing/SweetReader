@@ -35,7 +35,11 @@ public class BlurUtils {
 //                view.getViewTreeObserver().removeOnPreDrawListener(this);
 //                view.buildDrawingCache();
 //                Bitmap bmp = view.getDrawingCache();
-                blurForRS(actOne,bmp,view);
+                try {
+                    blurForRS(actOne, bmp, view);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 return true;
             }
         });

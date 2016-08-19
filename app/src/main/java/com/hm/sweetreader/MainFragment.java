@@ -57,13 +57,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             case R.id.menu_two:
                 intent = new Intent(getActivity(), WeatherActivity.class);
                 startActivity(intent);
-//                getActivity().finish();
+                getActivity().finish();
                 break;
             //背景音乐
             case R.id.menu_three:
                 intent = new Intent(getActivity(), MusicMainActivity.class);
                 startActivity(intent);
-//                getActivity()
+                getActivity().finish();
                 break;
             case R.id.menu_four:
                 intent = new Intent(getActivity(), MapActivity.class);

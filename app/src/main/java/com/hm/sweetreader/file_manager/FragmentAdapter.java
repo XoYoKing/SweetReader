@@ -75,11 +75,11 @@ public class FragmentAdapter extends BaseAdapter {
         if(mfileData[position].isDirectory() && mfileData[position].canRead()){
 //          文件夹分为空与非空
             if(mfileData[position].listFiles().length == 0 && mfileData[position].listFiles()== null  ){
-                mViewHolder.mFileImage.setImageResource(R.drawable.wenjian) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_file) ;
                 mViewHolder.mFileName.setText(mfileData[position].getName()) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
             }else{
-                mViewHolder.mFileImage.setImageResource(R.drawable.wenjianjia) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_folder) ;
                 mViewHolder.mFileName.setText(mfileData[position].getName()) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
             }
@@ -89,27 +89,27 @@ public class FragmentAdapter extends BaseAdapter {
             String _FileName = mfileData[position].getName().toLowerCase() ;
 
             if(_FileName.endsWith(".txt")){  //文本显示t
-                mViewHolder.mFileImage.setImageResource(R.drawable.wenjian) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_txt) ;
                 mViewHolder.mFileName.setText(_FileName) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
 
             }else if(_FileName.endsWith(".png") || _FileName.endsWith(".jpg") ||_FileName.endsWith(".jpeg") || _FileName.endsWith(".gif")){
                 mViewHolder.mFileImage.setTag(mfileData[position].getAbsolutePath()) ;
-                mViewHolder.mFileImage.setImageResource(R.drawable.ic_action_picture);
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_picture);
                 mViewHolder.mFileName.setText(_FileName) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
 
             }else if(_FileName.endsWith(".mp4")|| _FileName.endsWith(".avi")|| _FileName.endsWith(".3gp") || _FileName.endsWith(".rmvb")){
-                mViewHolder.mFileImage.setImageResource(R.drawable.ic_action_video) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_video) ;
                 mViewHolder.mFileName.setText(_FileName) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
 
             }else if(_FileName.endsWith("mp3")){
-                mViewHolder.mFileImage.setImageResource(R.mipmap.ic_launcher) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_mp3) ;
                 mViewHolder.mFileName.setText(mfileData[position].getName()) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
             }else if(_FileName.endsWith("doc")){
-                mViewHolder.mFileImage.setImageResource(R.mipmap.ic_launcher) ;
+                mViewHolder.mFileImage.setImageResource(R.drawable.icon_doc ) ;
                 mViewHolder.mFileName.setText(mfileData[position].getName()) ;
                 mViewHolder.mFileTime.setText(new Date(System.currentTimeMillis()).toLocaleString());
             }

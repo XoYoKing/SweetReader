@@ -79,7 +79,8 @@ public class ShowActivity extends AppCompatActivity {
         DBManager.newInstance(this).insertBook(bookName, path, "", name_tag, 0, size);
 
         try {
-            List<String> fileList = FileUtils.readFileContentBySection(path, name_tag);
+//            List<String> fileList = FileUtils.readFileContentBySection(path, name_tag);
+            List<String> fileList = FileUtils.readFileContentByString(path, name_tag);
             if (fileList.size() == 0) {
                 return;
             }

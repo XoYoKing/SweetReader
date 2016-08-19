@@ -1,18 +1,22 @@
 package com.hm.sweetreader.weather;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hm.sweetreader.Contents;
+import com.hm.sweetreader.MainActivity;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.db.DBManager;
 import com.hm.sweetreader.weather.weather_model.WeatherInfo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -214,5 +218,21 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //按下键盘上返回按钮
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case KeyEvent.KEYCODE_MENU:
+                super.openOptionsMenu();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

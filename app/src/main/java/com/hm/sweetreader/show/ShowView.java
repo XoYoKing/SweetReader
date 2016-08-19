@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hm.sweetreader.ScreenUtils;
@@ -15,64 +17,47 @@ import com.hm.sweetreader.ScreenUtils;
  * time：   15:40
  * purpose：
  */
-public class ShowView extends TextView {
+public class ShowView extends ScrollView {
 
     private Context context;
+    private TextView textView;
 
     public ShowView(Context context) {
-        super(context);
-        this.context = context;
+        this(context,null);
     }
 
     public ShowView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.context = context;
+        this(context, attrs,0);
     }
 
     public ShowView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        init();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        resize();
     }
 
-    /**
-     * 去除当前页无法显示的字
-     *
-     * @return 去掉的字数
-     */
-    public int resize() {
-        CharSequence oldContent = getText();
-        CharSequence newContent = oldContent.subSequence(0, getCharNum());
-        setText(newContent);
-        return oldContent.length() - newContent.length();
+    private void init(){
+        textView=new TextView(context);
+        LayoutParams params=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.addView(textView,params);
+
+    }
+    public void setText(String msg){
+        if (textView==null){
+            return;
+        }
+        textView.setText(msg);
+    }
+    public void setTextSize(int size){
+        if (textView==null){
+            return;
+        }
+        textView.setTextSize(size);
     }
 
-    /**
-     * 获取当前页总字数
-     */
-    public int getCharNum() {
-        return getLayout().getLineEnd(getLineNum());
-    }
-
-    /**
-     * 获取当前页总行数
-     */
-    public int getLineNum() {
-        Layout layout = getLayout();
-        int topOfLastLine = getHeight() - getPaddingTop() - getPaddingBottom() - getLineHeight();
-        return layout.getLineForVertical(topOfLastLine);
-    }
-
-    public int getCharHeighPX() {
-        return ScreenUtils.dip2px(context, getTextSize());
-    }
-
-    public int getLineTotal(Activity act) {
-        return ScreenUtils.screenHeigh(act) / getCharHeighPX();
-    }
 }

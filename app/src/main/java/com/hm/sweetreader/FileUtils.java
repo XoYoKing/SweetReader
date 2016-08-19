@@ -8,12 +8,15 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,6 +37,8 @@ import java.util.List;
  * purpose：文件操作工具类
  */
 public class FileUtils {
+
+    private static String TAG = FileUtils.class.getSimpleName();
 
     public static void getAllFileName(String path, ArrayList<String> fileName) {
         File file = new File(path);
@@ -57,6 +62,7 @@ public class FileUtils {
         String[] names = file.list();
         return names;
     }
+
     public static List<String> getFileList(String path) {
         List<String> list = new ArrayList<>();
         File file = new File(path);
@@ -64,7 +70,7 @@ public class FileUtils {
             return null;
         }
         String[] names = file.list();
-        for (String name:  names){
+        for (String name : names) {
             list.add(name);
         }
         return list;
@@ -226,7 +232,7 @@ public class FileUtils {
                     sb.append(line);
                     sb.append("\n");
                 }
-                Log.e("456", "this text is " + sb.toString());
+                Log.e(TAG, "this text is " + sb.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,7 +253,9 @@ public class FileUtils {
         String str = null;
         StringBuffer buffer = new StringBuffer(1024 * 64);
         BufferedReader bre = null;
+        String code = null;
         try {
+            code = getCharset(path);
             bre = new BufferedReader(new FileReader(path));//此时获取到的bre就是整个文件的缓存流
 //            while (bre.ready()) {
 //                str = bre.readLine();
@@ -257,17 +265,91 @@ public class FileUtils {
 //                if (str.trim().equals("")) {
 //                    buffer.append("\r\n");
 //                } else {
+                Log.e(TAG, "str is " + str);
                 buffer.append(str);
 //                }
                 buffer.append("\n");
             }
             bre.close();
-            Log.e("456", "buffer length is " + buffer.length());
+            Log.e(TAG, "buffer length is " + buffer.length());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return changeCharset(buffer.toString(), "UTF-8");
+//        Log.e(TAG,"code is "+code);
+        return changeCharset(buffer.toString(), code, "UTF-8");
+//        return new String(buffer.toString().getBytes(code),"UTF-8");
+    }
+
+    /**
+     * 读取文件
+     *
+     * @param path
+     * @return
+     */
+    public static String readFile(String path) {
+        File file = new File(path);
+        String code = null;
+        InputStreamReader read = null;//考虑到编码格式
+        StringBuffer buffer = new StringBuffer(1024 * 60);
+        try {
+//            code = getCharset(path);
+            read = new InputStreamReader(
+                    new FileInputStream(file), "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt = null;
+            String line = "";
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+//                System.out.println(lineTxt);
+//                buffer.append(lineTxt);
+//                buffer.append("\n");
+                String[] person = lineTxt.split(" ");//以空格分隔
+                line = "";
+                for (int i = 0; i < person.length ; i++) {
+                    if (person[i].compareTo("") != 0) {
+                        line = line + person[i] + "\n";
+                    }
+                    buffer.append(line);
+                }
+
+
+
+            }
+            read.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * 判断文件编码格式
+     *
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static String getCharset(String fileName) throws IOException {
+
+        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(fileName));
+        int p = (bin.read() << 8) + bin.read();
+
+        String code = null;
+
+        switch (p) {
+            case 0xefbb:
+                code = "UTF-8";
+                break;
+            case 0xfffe:
+                code = "Unicode";
+                break;
+            case 0xfeff:
+                code = "UTF-16BE";
+                break;
+            default:
+                code = "GBK";
+        }
+        return code;
     }
 
     /**
@@ -278,11 +360,11 @@ public class FileUtils {
      * @return
      * @throws UnsupportedEncodingException
      */
-    public static String changeCharset(String str, String newCharset)
+    public static String changeCharset(String str, String oldCharset, String newCharset)
             throws UnsupportedEncodingException {
         if (str != null) {
             //用默认字符编码解码字符串。
-            byte[] bs = str.getBytes();
+            byte[] bs = str.getBytes(oldCharset);
             //用新的字符编码生成字符串
             return new String(bs, newCharset);
         }
@@ -313,7 +395,7 @@ public class FileUtils {
     public static List<String> readFileContentBySection(String path, String name_tag) throws IOException {
         FileInputStream fin = new FileInputStream(path);
         FileChannel fcin = fin.getChannel();
-        ByteBuffer buffer = ByteBuffer.allocate(1024*512);
+        ByteBuffer buffer = ByteBuffer.allocate(1024 * 64 * 12);
         File file = new File(Contents.cacheFilePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -346,7 +428,116 @@ public class FileUtils {
         return fileList;
     }
 
-    public static long getFileLength(String path){
+    /**
+     * 用NIO把20g的文件分割开 生成到temp文件里
+     * 然后再用传统的方法去读取每一个小文件
+     */
+    public static List<String> readFileContentByString(String path, String name_tag) throws IOException {
+
+        BufferedReader reader = null;
+        StringBuffer buffer = new StringBuffer();
+        String code = getCharset(path);
+        try {
+
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), code)); // 指定读取文件的编码格式，要和写入的格式一致，以免出现中文乱码,
+            String str = null;
+            String line = "";
+            while ((str = reader.readLine()) != null) {
+                String[] person = str.split(" ");//以空格分隔
+                line = "";
+                for (int i = 0; i < person.length ; i++) {
+                    if (person[i].compareTo("") != 0) {
+                        line = line + person[i] + "\n";
+                    }
+                    buffer.append(line);
+//                    buffer.append(person[person.length - 1]);
+                }
+//                line = line + person[person.length - 1];
+
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String s = buffer.toString();
+        String stringCache = null;
+        BufferedWriter writer = null;
+        if (s.length() <= 0) {
+        }
+        File file = new File(Contents.cacheFilePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        if (s.length() < 1024 * 1024 * 1024 * 2) {
+            for (int i = 0; i < 2; i++) {
+                stringCache = s.substring(s.length() / 2 * i, s.length() / 2 * (i + 1) - 1);
+                try {
+                    writer = new BufferedWriter(new FileWriter(new File(Contents.cacheFilePath + File.separator + name_tag + "_" + i)));
+
+                    writer.write(stringCache);
+
+
+                } catch (Exception e) {
+
+                } finally {
+                    writer.close();
+                }
+            }
+        } else if (s.length() < 1024 * 1024 * 1024 * 5) {
+            for (int i = 0; i < 5; i++) {
+                stringCache = s.substring(s.length() / 5 * i, s.length() / 5 * (i + 1) - 1);
+                try {
+                    writer = new BufferedWriter(new FileWriter(new File(Contents.cacheFilePath + File.separator + name_tag + "_" + i)));
+
+                    writer.write(stringCache);
+
+
+                } catch (Exception e) {
+
+                } finally {
+                    writer.close();
+                }
+            }
+        } else {
+            for (int i = 0; i < 10; i++) {
+                stringCache = s.substring(s.length() / 10 * i, s.length() / 10 * (i + 1) - 1);
+                try {
+                    writer = new BufferedWriter(new FileWriter(new File(Contents.cacheFilePath + File.separator + name_tag + "_" + i)));
+
+                    writer.write(stringCache);
+
+                } catch (Exception e) {
+
+                } finally {
+                    writer.close();
+                }
+            }
+        }
+        List<String> fileList = new ArrayList<>();
+        File[] array = new File(Contents.cacheFilePath).listFiles();
+        if (null == array || array.length == 0) {
+            return null;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].getName().split("_")[0].equals(name_tag)) {
+                fileList.add(array[i].getPath());
+            }
+
+        }
+
+        return fileList;
+    }
+
+
+    public static long getFileLength(String path) {
         return new File(path).length();
     }
 
@@ -451,7 +642,7 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
     }
 }
 

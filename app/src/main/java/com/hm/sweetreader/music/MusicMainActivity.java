@@ -19,10 +19,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.hm.sweetreader.Contents;
+import com.hm.sweetreader.FileUtils;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.entity.MusicEntity;
+import com.hm.sweetreader.file_manager.FileMangerActivity;
 import com.hm.sweetreader.music.view.BlurUtils;
 import com.hm.sweetreader.music.view.MusicPlayViewGroup;
 import com.nineoldandroids.view.ViewHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MusicMainActivity extends AppCompatActivity {
 
@@ -38,6 +44,8 @@ public class MusicMainActivity extends AppCompatActivity {
     String[] authorStrs = new String[]{"毛宁", "成龙", "未知艺术家"};
     //是否是手动拖动seekbar
     private boolean isAuto = false;
+
+    private List<MusicEntity> musicList=new ArrayList<>();
 
     private DrawerLayout drawerLayout;
     private MusicPlayViewGroup musicPlayViewGroup;
@@ -61,8 +69,18 @@ public class MusicMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         //来自文件选择的路径
         String path = getIntent().getStringExtra("filePath");
+
+        if (path==null||path.isEmpty()){
+            Intent intent=new Intent(this, FileMangerActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        MusicEntity entity=new MusicEntity();
+        entity.setMusicName(FileUtils.getFileName(path,false));
 
         //启动后台Service
         Intent intent = new Intent(this, MusicService.class);
@@ -70,6 +88,9 @@ public class MusicMainActivity extends AppCompatActivity {
             intent.putExtra("filePath", path);
         }
         startService(intent);
+        //获取到图标信息后加载
+        musicBlurView=(RelativeLayout)findViewById(R.id.music_main_view) ;
+        BlurUtils.applyBlurForRS(this,musicBlurView, BitmapFactory.decodeResource(getResources(),R.drawable.icon));
     }
 
     private void init() {
@@ -77,9 +98,6 @@ public class MusicMainActivity extends AppCompatActivity {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED,
                 Gravity.RIGHT);
         initEvents();
-
-        musicBlurView=(RelativeLayout)findViewById(R.id.music_main_view) ;
-        BlurUtils.applyBlurForRS(this,musicBlurView, BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
 
         btnPlayOrPause = (ImageView) findViewById(R.id.music_main_play);
         btnPre = (ImageView) findViewById(R.id.music_main_last);
@@ -93,6 +111,7 @@ public class MusicMainActivity extends AppCompatActivity {
         author = (TextView) findViewById(R.id.music_main_anuthor);
 
         musicPlayViewGroup = (MusicPlayViewGroup) findViewById(R.id.music_main_group);
+        musicPlayViewGroup.setBackground(BitmapFactory.decodeResource(getResources(),R.drawable.icon));
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
@@ -141,7 +160,6 @@ public class MusicMainActivity extends AppCompatActivity {
     SeekBar.OnSeekBarChangeListener sChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
             //当拖动停止后，控制mediaPlayer播放指定位置的音乐
             if (isAuto) {
                 sendBroadcastToService(0, seekBar.getProgress());
@@ -197,7 +215,6 @@ public class MusicMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
         switch (item.getItemId()) {
             case Contents.MENU_ABOUT:
 //                LayoutInflater inflater = LayoutInflater.from(this);
@@ -224,11 +241,12 @@ public class MusicMainActivity extends AppCompatActivity {
     class MusicBoxReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
             if (intent.getAction().equals(Contents.MUSICBOX_ACTION)) {
                 // 获取Intent中的current消息，current代表当前正在播放的歌曲
                 int current = intent.getIntExtra("current", -1);
-                title.setText(titleStrs[current]);//更新音乐标题
+                title.setText(musicList.get(current).getMusicName());
+                author.setText(musicList.get(current).getMusicPlayer()+"");
+//                title.setText(titleStrs[current]);//更新音乐标题
                 author.setText(authorStrs[current]);//更新音乐作者
             } else if (intent.getAction().equals(Contents.MUSICBOX_ACTION_PROGRESS)) {
                 //获得音乐长度

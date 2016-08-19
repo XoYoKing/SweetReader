@@ -86,18 +86,18 @@ public class MainActivity extends FragmentActivity {
             file.mkdirs();
         }
 
-        try {
-            InputStream inputStream = getAssets().open(name);
-            FileOutputStream fos = new FileOutputStream(Contents.rootFilePath + File.separator + fileName);
-            byte[] b = new byte[1024];
-            while ((inputStream.read(b)) != -1) {
-                fos.write(b);
-            }
-            inputStream.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            InputStream inputStream = getAssets().open(name);
+//            FileOutputStream fos = new FileOutputStream(Contents.rootFilePath + File.separator + fileName);
+//            byte[] b = new byte[1024];
+//            while ((inputStream.read(b)) != -1) {
+//                fos.write(b);
+//            }
+//            inputStream.close();
+//            fos.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void OpenLeftMenu(View view)
