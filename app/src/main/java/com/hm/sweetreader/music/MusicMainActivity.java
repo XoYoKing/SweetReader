@@ -81,6 +81,7 @@ public class MusicMainActivity extends AppCompatActivity {
 
         MusicEntity entity=new MusicEntity();
         entity.setMusicName(FileUtils.getFileName(path,false));
+        musicList.add(entity);
 
         //启动后台Service
         Intent intent = new Intent(this, MusicService.class);
@@ -244,6 +245,9 @@ public class MusicMainActivity extends AppCompatActivity {
             if (intent.getAction().equals(Contents.MUSICBOX_ACTION)) {
                 // 获取Intent中的current消息，current代表当前正在播放的歌曲
                 int current = intent.getIntExtra("current", -1);
+                if (current>=musicList.size()||current<0){
+                    current=0;
+                }
                 title.setText(musicList.get(current).getMusicName());
                 author.setText(musicList.get(current).getMusicPlayer()+"");
 //                title.setText(titleStrs[current]);//更新音乐标题

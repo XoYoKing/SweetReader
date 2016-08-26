@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.hm.sweetreader.file_manager.FileMangerActivity;
+import com.hm.sweetreader.file_manager_copy.FileManagerCopyActivity;
 import com.hm.sweetreader.map.MapActivity;
 import com.hm.sweetreader.music.MusicMainActivity;
 import com.hm.sweetreader.weather.WeatherActivity;
@@ -49,7 +50,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             //导入书籍
             case R.id.menu_one:
-                intent = new Intent(getActivity(), FileMangerActivity.class);
+                intent = new Intent(getActivity(), FileManagerCopyActivity.class);
+//                intent = new Intent(getActivity(), FileMangerActivity.class);
                 startActivity(intent);
                 getActivity().finish();
                 break;

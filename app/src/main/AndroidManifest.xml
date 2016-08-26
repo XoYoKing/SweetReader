@@ -33,7 +33,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".map.MapActivity"></activity>
+        <activity android:name=".map.MapActivity" />
+        <activity android:name=".file_manager_copy.FileManagerCopyActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_file_manager_copy"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hm.sweetreader.file_manager_copy.FileManagerCopyActivity"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/file_manager_copy_title">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/ic_launcher"
+            android:id="@+id/file_manager_copy_black"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/file_manager_copy_recycle"
+        android:layout_below="@+id/file_manager_copy_title" />
+
+</RelativeLayout>

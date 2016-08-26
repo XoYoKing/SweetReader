@@ -111,7 +111,7 @@ public class MusicPlayView extends View {
         //画图片，就是贴图
 
 //        Rect rect=new Rect(0,0,144,144);
-        RectF rectF = new RectF(getX() + center / 4 * 3, getY() + center / 4, getX() + center / 4 * 5, getY()+center/4*3);
+        RectF rectF = new RectF(center-innerCircle, center-innerCircle, center+innerCircle, center+innerCircle);
         canvas.drawBitmap(bitmap, null, rectF, paintNei);
 
         //绘制圆环
