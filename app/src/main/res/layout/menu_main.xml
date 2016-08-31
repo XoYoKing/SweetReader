@@ -103,7 +103,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/four"
-                android:text="第4个Item"
+                android:text="地  图"
                 android:textColor="#f0f0f0"
                 android:textSize="20sp" />
         </RelativeLayout>

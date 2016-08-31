@@ -21,8 +21,10 @@ import android.widget.TextView;
 import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.FileUtils;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.ThemeUtils;
 import com.hm.sweetreader.entity.MusicEntity;
 import com.hm.sweetreader.file_manager.FileMangerActivity;
+import com.hm.sweetreader.file_manager_copy.FileManagerCopyActivity;
 import com.hm.sweetreader.music.view.BlurUtils;
 import com.hm.sweetreader.music.view.MusicPlayViewGroup;
 import com.nineoldandroids.view.ViewHelper;
@@ -54,6 +56,7 @@ public class MusicMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtils.initTheme(this);
         setContentView(R.layout.activity_music_main);
         init();
         //注册接收器
@@ -74,7 +77,7 @@ public class MusicMainActivity extends AppCompatActivity {
         String path = getIntent().getStringExtra("filePath");
 
         if (path==null||path.isEmpty()){
-            Intent intent=new Intent(this, FileMangerActivity.class);
+            Intent intent=new Intent(this, FileManagerCopyActivity.class);
             startActivity(intent);
             finish();
         }

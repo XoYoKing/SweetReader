@@ -2,11 +2,14 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_drawerlayout">
+    android:id="@+id/main_drawerlayout"
+    android:background="?attr/clockBackground">
 
     <RelativeLayout
+        android:id="@+id/main_relative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/clockBackground">
 
         <RelativeLayout
             android:id="@+id/main_view"
@@ -17,19 +20,27 @@
                 android:id="@+id/main_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="选择书籍" />
+                android:text="选择书籍"
+                android:background="?attr/clockBackground"
+                android:textColor="?attr/clockTextColor"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="MyReader" />
+                android:text="MyReader"
+                android:id="@+id/main_title"
+                android:background="?attr/clockBackground"
+                android:textColor="?attr/clockTextColor"/>
 
             <ImageView
+                android:id="@+id/main_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/ic_launcher" />
+                android:background="@drawable/icon_day_night"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"/>
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -37,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/main_view"
-            android:background="@mipmap/background"></android.support.v7.widget.RecyclerView>
+            android:background="?attr/clockBackground"></android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
     <fragment

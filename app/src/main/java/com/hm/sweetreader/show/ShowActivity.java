@@ -15,6 +15,7 @@ import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.FileUtils;
 import com.hm.sweetreader.MainActivity;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.ThemeUtils;
 import com.hm.sweetreader.db.DBManager;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class ShowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtils.initTheme(this);
         setContentView(R.layout.activity_show);
 
         progressBar = (ProgressBar) findViewById(R.id.show_progressbar);

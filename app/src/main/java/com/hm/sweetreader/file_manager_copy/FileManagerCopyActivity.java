@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.hm.sweetreader.DayNightHelper;
 import com.hm.sweetreader.FileUtils;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.ThemeUtils;
 import com.hm.sweetreader.music.MusicMainActivity;
 import com.hm.sweetreader.show.ShowActivity;
 
@@ -28,6 +30,7 @@ public class FileManagerCopyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtils.initTheme(this);
         setContentView(R.layout.activity_file_manager_copy);
         initView();
     }

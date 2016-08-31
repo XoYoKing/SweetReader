@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.hm.sweetreader.Contents;
 import com.hm.sweetreader.MainActivity;
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.ThemeUtils;
 import com.hm.sweetreader.db.DBManager;
 import com.hm.sweetreader.weather.weather_model.WeatherInfo;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -48,6 +49,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtils.initTheme(this);
         setContentView(R.layout.activity_weather);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()

@@ -2,12 +2,14 @@ package com.hm.sweetreader.show;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.hm.sweetreader.DayNightHelper;
 import com.hm.sweetreader.ScreenUtils;
 
 /**
@@ -43,6 +45,15 @@ public class ShowView extends ScrollView {
 
     private void init(){
         textView=new TextView(context);
+        if (DayNightHelper.newInstance(context).isDay()){
+            textView.setTextColor(Color.BLACK);
+            textView.setBackgroundColor(Color.WHITE);
+            this.setBackgroundColor(Color.WHITE);
+        }else {
+            textView.setTextColor(Color.rgb(138,149,153));
+            textView.setBackgroundColor(Color.rgb(63,63,63));
+            this.setBackgroundColor(Color.rgb(63,63,63));
+        }
         LayoutParams params=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.addView(textView,params);
 

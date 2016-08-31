@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LRCView">
-        <attr name="isSingleLine" format="boolean"/>
-        <attr name="textSize" format="dimension"/>
-        <attr name="textColor" format="color"/>
-    </declare-styleable>
+    <attr name="clockBackground" format="color" />
+    <attr name="clockTextColor" format="color" />
 </resources>

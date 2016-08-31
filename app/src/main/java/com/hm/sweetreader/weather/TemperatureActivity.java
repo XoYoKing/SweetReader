@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.hm.sweetreader.R;
+import com.hm.sweetreader.ThemeUtils;
 import com.hm.sweetreader.weather.view.WeatherBrokenLineView;
 
 /**
@@ -14,6 +15,7 @@ public class TemperatureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtils.initTheme(this);
         setContentView(R.layout.activity_test);
 
         WeatherBrokenLineView myView=(WeatherBrokenLineView) findViewById(R.id.my_view);

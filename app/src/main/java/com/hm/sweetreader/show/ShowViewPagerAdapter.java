@@ -35,6 +35,7 @@ public class ShowViewPagerAdapter extends PagerAdapter {
     private List<ShowEntity> showList = new ArrayList<>();
     private int pathListSize = 0;
     private int pageTag = 0;
+    private boolean theme=true;
 
     public ShowViewPagerAdapter(Context context, List<String> filePathList, long pageNum) {
         super();
@@ -42,6 +43,7 @@ public class ShowViewPagerAdapter extends PagerAdapter {
         this.filePathList = filePathList;
         pathListSize = filePathList.size();
         this.pageNum = pageNum;
+
         try {
             loadMore(getData(filePathList.get(0)));
         } catch (UnsupportedEncodingException e) {
@@ -196,9 +198,6 @@ public class ShowViewPagerAdapter extends PagerAdapter {
 
     private List<ShowEntity> getData(String resId) throws UnsupportedEncodingException {
         String s = FileUtils.readFile(resId);
-//        String s = FileUtils.readFileContentByBufferReader(resId);
-        Log.e(TAG, "s length is " + s.length());
-//        Log.e(TAG, "s  is " + s);
         int page = 0;
         if (s.length() % Contents.byteInPage == 0) {
             page = s.length() / (64 * 12);
@@ -215,7 +214,7 @@ public class ShowViewPagerAdapter extends PagerAdapter {
                 listShow.add(showEntity);
                 break;
             }
-            String mm = s.substring(i * Contents.byteInPage, (i + 1) * Contents.byteInPage - 1);
+            String mm = s.substring(i * Contents.byteInPage, (i + 1) * Contents.byteInPage );
             Log.e(TAG, "start " + i + " is" + i * Contents.byteInPage);
             Log.e(TAG, "end " + i + " is" + (i + 1) * Contents.byteInPage);
 //            Log.e(TAG, "MM === " + mm);

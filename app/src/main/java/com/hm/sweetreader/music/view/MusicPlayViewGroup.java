@@ -88,6 +88,7 @@ public class MusicPlayViewGroup extends RelativeLayout {
     public void pauseAnimation() {
 //        offerX = anim.getCurrentPlayTime();
         if (anim != null)
+            //TODO 用我的手机测试 版本太低 报错
             anim.pause();
     }
 
