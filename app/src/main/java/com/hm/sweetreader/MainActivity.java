@@ -77,7 +77,7 @@ public class MainActivity extends FragmentActivity {
         findViewById(R.id.main_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"ONclIK");
+                Log.e(TAG,"ONClIK");
                 showAnimation();
                 setTheme();
                 refreshUI();

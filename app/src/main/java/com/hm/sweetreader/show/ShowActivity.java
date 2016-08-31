@@ -35,8 +35,6 @@ public class ShowActivity extends AppCompatActivity {
     private List<String> listPath = new ArrayList<>();
     private ShowViewPagerAdapter adapter;
 
-    private int test = 200;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +43,13 @@ public class ShowActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.show_progressbar);
         viewPager = (ViewPager) findViewById(R.id.show_viewpager);
-        Button button = (Button) findViewById(R.id.show_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                test++;
-                viewPager.setCurrentItem(test);
-            }
-        });
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                test++;
+//                viewPager.setCurrentItem(test);
+//            }
+//        });
         init();
     }
 
